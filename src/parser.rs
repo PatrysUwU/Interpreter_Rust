@@ -4,6 +4,9 @@ use std::fmt::{write, Formatter};
 mod lexer;
 use lexer::Lexer;
 
+pub fn print_error(line: i32, message: String) {
+    eprintln!("[line {}] Error :{}", line, message);
+}
 #[derive(Debug)]
 #[allow(dead_code, non_camel_case_types)]
 pub enum TokenType {

@@ -1,5 +1,5 @@
 use bytes::BytesMut;
-use crate::parser::{LiteralValue, Token, TokenType};
+use crate::parser::{LiteralValue, Token, TokenType, print_error};
 
 pub struct Lexer {
     source: BytesMut,
@@ -7,6 +7,7 @@ pub struct Lexer {
     line: i32,
     curr: usize,
     start: usize,
+    error_code: i32,
 }
 
 impl Lexer {
@@ -17,6 +18,7 @@ impl Lexer {
             line: 0,
             curr: 0,
             start: 1,
+            error_code: 0,
         }
     }
 
@@ -50,7 +52,7 @@ impl Lexer {
             b'+' => { self.add_token(TokenType::PLUS) }
             b';' => { self.add_token(TokenType::SEMICOLON) }
             b'*' => { self.add_token(TokenType::STAR) }
-            _ => todo!()
+            other => { print_error(self.line, format!("Unexpected character: {}", other as char)) }
         }
     }
 
