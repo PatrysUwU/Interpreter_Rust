@@ -29,7 +29,7 @@ fn main() {
                 let mut parser = Parser::new(file_contents);
                 parser.print_tokens();
             } else {
-                println!("EOF  NULL")
+                println!("EOF  null")
             }
         }
         _ => {
