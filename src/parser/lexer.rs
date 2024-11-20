@@ -86,7 +86,7 @@ impl Lexer {
             b'\n' => { self.line += 1 }
 
             other => {
-                print_error(self.line, format!("Unexpected character: {}", other));
+                print_error(self.line, format!("Unexpected character: {}", other as char));
                 self.exit_code = 65
             }
         }
