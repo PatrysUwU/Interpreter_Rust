@@ -78,14 +78,26 @@ impl Lexer {
             }
             b'/' => {
                 match self.match_next(b'/') {
-                    true => { todo!() }
+                    true => { self.skip_line() }
                     false => { self.add_token(TokenType::SLASH) }
                 }
             }
+            b' ' | b'\t' | b'\r' => {}
+            b'\n' => { self.line += 1 }
+
             other => {
-                print_error(self.line, format!("Unexpected character: {}", other as char));
+                print_error(self.line, format!("Unexpected character: {}", other));
                 self.exit_code = 65
             }
+        }
+    }
+
+    fn skip_line(&mut self) {
+        while let Some(x) = self.peek() {
+            if x == b'\n' || self.is_at_end() {
+                break;
+            }
+            self.advance();
         }
     }
 
