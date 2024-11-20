@@ -52,7 +52,10 @@ impl Lexer {
             b'+' => { self.add_token(TokenType::PLUS) }
             b';' => { self.add_token(TokenType::SEMICOLON) }
             b'*' => { self.add_token(TokenType::STAR) }
-            other => { print_error(self.line, format!("Unexpected character: {}", other as char)) }
+            other => {
+                print_error(self.line, format!("Unexpected character: {}", other as char));
+                self.error_code = 65
+            }
         }
     }
 
