@@ -76,6 +76,12 @@ impl Lexer {
                     false => { self.add_token(TokenType::GREATER) }
                 }
             }
+            b'/' => {
+                match self.match_next(b'/') {
+                    true => { todo!() }
+                    false => { self.add_token(TokenType::SLASH) }
+                }
+            }
             other => {
                 print_error(self.line, format!("Unexpected character: {}", other as char));
                 self.exit_code = 65
