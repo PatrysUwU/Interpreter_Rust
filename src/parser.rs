@@ -68,7 +68,7 @@ impl fmt::Display for LiteralValue {
         match &self {
             LiteralValue::Int(x) => { write!(f, "{x}") }
             LiteralValue::String(x) => { write!(f, "{x}") }
-            LiteralValue::Null => { write!(f, "NULL") }
+            LiteralValue::Null => { write!(f, "null") }
         }
     }
 }
