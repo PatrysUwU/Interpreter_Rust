@@ -15,7 +15,7 @@ impl Lexer {
         Lexer {
             tokens: Vec::new(),
             source: BytesMut::from(source.as_str()),
-            line: 0,
+            line: 1,
             curr: 0,
             start: 1,
             exit_code: 0,
