@@ -89,6 +89,7 @@ impl Token {
             lexeme,
             literal,
             line,
+
         }
     }
 }
@@ -103,6 +104,7 @@ impl fmt::Display for Token {
 pub struct Parser {
     lexer: Lexer,
     tokens: Vec<Token>,
+    pub exit_code: i32,
 }
 
 impl Parser {
@@ -110,6 +112,7 @@ impl Parser {
         Parser {
             lexer: Lexer::new(source),
             tokens: Vec::new(),
+            exit_code: 0,
         }
     }
 
@@ -118,5 +121,6 @@ impl Parser {
         for token in self.lexer.tokens.iter() {
             println!("{}", token);
         }
+        self.exit_code = self.lexer.exit_code;
     }
 }

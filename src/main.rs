@@ -4,6 +4,7 @@ use parser::Parser;
 use std::env;
 use std::fs;
 use std::io::{self, Write};
+use std::process::exit;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -28,6 +29,7 @@ fn main() {
             if !file_contents.is_empty() {
                 let mut parser = Parser::new(file_contents);
                 parser.print_tokens();
+                exit(parser.exit_code)
             } else {
                 println!("EOF  null")
             }

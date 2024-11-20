@@ -7,7 +7,7 @@ pub struct Lexer {
     line: i32,
     curr: usize,
     start: usize,
-    error_code: i32,
+    pub exit_code: i32,
 }
 
 impl Lexer {
@@ -18,7 +18,7 @@ impl Lexer {
             line: 0,
             curr: 0,
             start: 1,
-            error_code: 0,
+            exit_code: 0,
         }
     }
 
@@ -54,7 +54,7 @@ impl Lexer {
             b'*' => { self.add_token(TokenType::STAR) }
             other => {
                 print_error(self.line, format!("Unexpected character: {}", other as char));
-                self.error_code = 65
+                self.exit_code = 65
             }
         }
     }
