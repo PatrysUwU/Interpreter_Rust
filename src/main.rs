@@ -1,3 +1,6 @@
+mod parser;
+use parser::Parser;
+
 use std::env;
 use std::fs;
 use std::io::{self, Write};
@@ -23,9 +26,10 @@ fn main() {
             });
 
             if !file_contents.is_empty() {
-                panic!("Scanner not implemented");
+                let mut parser = Parser::new(file_contents);
+                parser.print_tokens();
             } else {
-                println!("EOF  null"); // Placeholder, remove this line when implementing the scanner
+                panic!("empty file")
             }
         }
         _ => {
