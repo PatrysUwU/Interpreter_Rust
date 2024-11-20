@@ -30,7 +30,7 @@ pub enum TokenType {
     EQUAL_EQUAL,
 
     GREATER,
-    GREATE_REQUAL,
+    GREATER_EQUAL,
     LESS,
     LESS_EQUAL,
 
