@@ -106,7 +106,8 @@ impl Lexer {
 
                 if self.is_at_end() {
                     self.exit_code = 65;
-                    print_error(self.line, "Unterminated string.".to_string())
+                    print_error(self.line, "Unterminated string.".to_string());
+                    return;
                 }
 
                 self.advance();
@@ -115,7 +116,7 @@ impl Lexer {
             }
         }
         let val = &self.source[self.start + 1..self.curr - 1];
-        return self.add_token(TokenType::STRING(String::from_utf8(val.to_vec()).unwrap()));
+        self.add_token(TokenType::STRING(String::from_utf8(val.to_vec()).unwrap()));
     }
 
     fn skip_line(&mut self) {
