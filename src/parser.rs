@@ -60,43 +60,37 @@ pub enum TokenType {
     EOF,
 }
 
-enum LiteralValue {
-    Int(i32),
-    String(String),
-    Null,
-}
 
-impl fmt::Display for LiteralValue {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match &self {
-            LiteralValue::Int(x) => { write!(f, "{x}") }
-            LiteralValue::String(x) => { write!(f, "{x}") }
-            LiteralValue::Null => { write!(f, "null") }
-        }
-    }
-}
 pub struct Token {
     token_type: TokenType,
     lexeme: String,
-    literal: LiteralValue,
     line: i32,
 }
 
 impl Token {
-    fn new(token_type: TokenType, lexeme: String, literal: LiteralValue, line: i32) -> Self {
+    fn new(token_type: TokenType, lexeme: String, line: i32) -> Self {
         Token {
             token_type,
             lexeme,
-            literal,
             line,
-
         }
     }
 }
 
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?} {} {}", self.token_type, self.lexeme, self.literal)
+        match &self.token_type {
+            TokenType::IDENTIFIER(x) |
+            TokenType::STRING(x) => {
+                write!(f, "{:?} {} {}", self.token_type, self.lexeme, x)
+            }
+            TokenType::NUMBER(x) => {
+                write!(f, "{:?} {} {}", self.token_type, self.lexeme, x)
+            }
+            _ => {
+                write!(f, "{:?} {} null", self.token_type, self.lexeme)
+            }
+        }
     }
 }
 

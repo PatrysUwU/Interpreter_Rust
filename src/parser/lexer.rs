@@ -1,5 +1,5 @@
 use bytes::BytesMut;
-use crate::parser::{LiteralValue, Token, TokenType, print_error};
+use crate::parser::{Token, TokenType, print_error};
 
 pub struct Lexer {
     source: BytesMut,
@@ -28,7 +28,7 @@ impl Lexer {
             self.start = self.curr;
             self.scan_token();
         }
-        self.tokens.push(Token::new(TokenType::EOF, String::from(""), LiteralValue::Null, self.line));
+        self.tokens.push(Token::new(TokenType::EOF, String::from(""), self.line));
     }
 
     fn is_at_end(&self) -> bool {
@@ -52,6 +52,7 @@ impl Lexer {
             b'+' => { self.add_token(TokenType::PLUS) }
             b';' => { self.add_token(TokenType::SEMICOLON) }
             b'*' => { self.add_token(TokenType::STAR) }
+            b'"' => { self.string() }
             b'!' => {
                 match self.match_next(b'=') {
                     true => { self.add_token(TokenType::BANG_EQUAL) }
@@ -92,6 +93,31 @@ impl Lexer {
         }
     }
 
+    fn string(&mut self) {
+        loop {
+            if let Some(x) = self.peek() {
+                if x == b'"' || self.is_at_end() {
+                    break;
+                }
+                if x == b'\n' {
+                    self.line += 1;
+                }
+                self.advance();
+
+                if self.is_at_end() {
+                    self.exit_code = 65;
+                    print_error(self.line, "Unterminated string.".to_string())
+                }
+
+                self.advance();
+            } else {
+                break;
+            }
+        }
+        let val = &self.source[self.start + 1..self.curr - 1];
+        return self.add_token(TokenType::STRING(String::from_utf8(val.to_vec()).unwrap()));
+    }
+
     fn skip_line(&mut self) {
         while let Some(x) = self.peek() {
             if x == b'\n' || self.is_at_end() {
@@ -104,7 +130,7 @@ impl Lexer {
     fn add_token(&mut self, token_type: TokenType) {
         let text = &self.source[self.start..self.curr];
         let text: String = String::from_utf8(text.to_vec()).unwrap();
-        self.tokens.push(Token::new(token_type, text, LiteralValue::Null, self.line))
+        self.tokens.push(Token::new(token_type, text, self.line))
     }
 
     fn advance(&mut self) -> u8 {
