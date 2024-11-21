@@ -60,6 +60,52 @@ pub enum TokenType {
     EOF,
 }
 
+impl fmt::Display for TokenType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            TokenType::LEFT_PAREN => { write!(f, "LEFT_PAREN") }
+            TokenType::RIGHT_PAREN => { write!(f, "RIGHT_PAREN") }
+            TokenType::LEFT_BRACE => { write!(f, "LEFT_BRACE") }
+            TokenType::RIGHT_BRACE => { write!(f, "RIGHT_BRACE") }
+            TokenType::COMMA => { write!(f, "COMMA") }
+            TokenType::DOT => { write!(f, "DOT") }
+            TokenType::MINUS => { write!(f, "MINUS") }
+            TokenType::PLUS => { write!(f, "PLUS") }
+            TokenType::SEMICOLON => { write!(f, "SEMICOLON") }
+            TokenType::SLASH => { write!(f, "SLASH") }
+            TokenType::STAR => { write!(f, "STAR") }
+            TokenType::BANG => { write!(f, "BANG") }
+            TokenType::BANG_EQUAL => { write!(f, "BANG_EQUAL") }
+            TokenType::EQUAL => { write!(f, "EQUAL") }
+            TokenType::EQUAL_EQUAL => { write!(f, "EQUAL_EQUAL") }
+            TokenType::GREATER => { write!(f, "GREATER") }
+            TokenType::GREATER_EQUAL => { write!(f, "GREATER_EQUAL") }
+            TokenType::LESS => { write!(f, "LESS") }
+            TokenType::LESS_EQUAL => { write!(f, "LESS_EQUAL") }
+            TokenType::IDENTIFIER(_) => { write!(f, "IDENTIFIER") }
+            TokenType::STRING(_) => { write!(f, "STRING") }
+            TokenType::NUMBER(_) => { write!(f, "NUMBER") }
+            TokenType::AND => { write!(f, "AND") }
+            TokenType::CLASS => { write!(f, "CLASS") }
+            TokenType::ELSE => { write!(f, "ELSE") }
+            TokenType::FALSE => { write!(f, "FALSE") }
+            TokenType::FUN => { write!(f, "FUN") }
+            TokenType::FOR => { write!(f, "FOR") }
+            TokenType::IF => { write!(f, "IF") }
+            TokenType::NIL => { write!(f, "NIL") }
+            TokenType::OR => { write!(f, "OR") }
+            TokenType::PRINT => { write!(f, "PRINT") }
+            TokenType::RETURN => { write!(f, "RETURN") }
+            TokenType::SUPER => { write!(f, "SUPER") }
+            TokenType::THIS => { write!(f, "THIS") }
+            TokenType::TRUE => { write!(f, "TRUE") }
+            TokenType::VAR => { write!(f, "VAR") }
+            TokenType::WHILE => { write!(f, "WHILE") }
+            TokenType::EOF => { write!(f, "EOF") }
+        }
+    }
+}
+
 
 pub struct Token {
     token_type: TokenType,
