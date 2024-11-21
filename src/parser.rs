@@ -128,13 +128,13 @@ impl fmt::Display for Token {
         match &self.token_type {
             TokenType::IDENTIFIER(x) |
             TokenType::STRING(x) => {
-                write!(f, "{:?} {} {}", self.token_type, self.lexeme, x)
+                write!(f, "{} {} {}", self.token_type, self.lexeme, x)
             }
             TokenType::NUMBER(x) => {
-                write!(f, "{:?} {} {}", self.token_type, self.lexeme, x)
+                write!(f, "{} {} {}", self.token_type, self.lexeme, x)
             }
             _ => {
-                write!(f, "{:?} {} null", self.token_type, self.lexeme)
+                write!(f, "{} {} null", self.token_type, self.lexeme)
             }
         }
     }
