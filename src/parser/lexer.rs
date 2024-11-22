@@ -89,9 +89,10 @@ impl Lexer {
             other => {
                 if { other.is_ascii_digit() } {
                     self.number();
+                } else {
+                    print_error(self.line, format!("Unexpected character: {}", other as char));
+                    self.exit_code = 65
                 }
-                print_error(self.line, format!("Unexpected character: {}", other as char));
-                self.exit_code = 65
             }
         }
     }
