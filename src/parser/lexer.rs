@@ -1,4 +1,4 @@
-use bytes::BytesMut;
+use bytes::{Buf, BytesMut};
 use crate::parser::{Token, TokenType, print_error};
 
 pub struct Lexer {
@@ -87,6 +87,9 @@ impl Lexer {
             b'\n' => { self.line += 1 }
 
             other => {
+                if { other.is_ascii_digit() } {
+                    self.number();
+                }
                 print_error(self.line, format!("Unexpected character: {}", other as char));
                 self.exit_code = 65
             }
@@ -116,6 +119,40 @@ impl Lexer {
         self.advance();
         let val = &self.source[self.start + 1..self.curr - 1];
         self.add_token(TokenType::STRING(String::from_utf8(val.to_vec()).unwrap()));
+    }
+    fn number(&mut self) {
+        while let Some(x) = self.peek() {
+            if !x.is_ascii_digit() {
+                break;
+            }
+            self.advance();
+        }
+        if let Some(x) = self.peek() {
+            if let Some(y) = self.peek_next() {
+                if x == b'.' && y.is_ascii_digit() {
+                    self.advance();
+                    while let Some(x) = self.peek() {
+                        if !x.is_ascii_digit() {
+                            break;
+                        }
+                        self.advance();
+                    }
+                }
+            }
+        }
+        let val = &self.source[self.start..self.curr];
+        self.add_token(TokenType::NUMBER(String::from_utf8(val.to_vec()).unwrap().parse().unwrap()));
+    }
+
+    fn peek_next(&mut self) -> Option<u8> {
+        self.curr += 1;
+        if !self.is_at_end() {
+            self.curr -= 1;
+            Some(self.source[self.curr + 1])
+        } else {
+            self.curr -= 1;
+            None
+        }
     }
 
     fn skip_line(&mut self) {
