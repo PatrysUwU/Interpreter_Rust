@@ -131,7 +131,7 @@ impl fmt::Display for Token {
                 write!(f, "{} {} {}", self.token_type, self.lexeme, x)
             }
             TokenType::NUMBER(x) => {
-                write!(f, "{} {} {}", self.token_type, self.lexeme, x)
+                write!(f, "{} {} {:?}", self.token_type, self.lexeme, x)
             }
             _ => {
                 write!(f, "{} {} null", self.token_type, self.lexeme)
