@@ -85,10 +85,11 @@ impl Lexer {
             }
             b' ' | b'\t' | b'\r' => {}
             b'\n' => { self.line += 1 }
-
             other => {
                 if { other.is_ascii_digit() } {
                     self.number();
+                } else if other.is_ascii_alphabetic() {
+                    self.identifier();
                 } else {
                     print_error(self.line, format!("Unexpected character: {}", other as char));
                     self.exit_code = 65
@@ -97,6 +98,37 @@ impl Lexer {
         }
     }
 
+    fn identifier(&mut self) {
+        while let Some(c) = self.peek() {
+            if c.is_ascii_alphanumeric() {
+                self.advance();
+            } else {
+                break;
+            }
+        }
+        let val = std::str::from_utf8(&self.source[self.start..self.curr]).unwrap();
+        match val {
+            "and" => self.add_token(TokenType::AND),
+            "class" => self.add_token(TokenType::CLASS),
+            "else" => self.add_token(TokenType::ELSE),
+            "false" => self.add_token(TokenType::FALSE),
+            "for" => self.add_token(TokenType::FOR),
+            "fun" => self.add_token(TokenType::FUN),
+            "if" => self.add_token(TokenType::IF),
+            "nil" => self.add_token(TokenType::NIL),
+            "or" => self.add_token(TokenType::OR),
+            "print" => self.add_token(TokenType::PRINT),
+            "return" => self.add_token(TokenType::RETURN),
+            "super" => self.add_token(TokenType::SUPER),
+            "this" => self.add_token(TokenType::THIS),
+            "true" => self.add_token(TokenType::TRUE),
+            "var" => self.add_token(TokenType::VAR),
+            "while" => self.add_token(TokenType::WHILE),
+            _ => {
+                self.add_token(TokenType::IDENTIFIER(val.to_string()))
+            }
+        }
+    }
     fn string(&mut self) {
         loop {
             if let Some(x) = self.peek() {
