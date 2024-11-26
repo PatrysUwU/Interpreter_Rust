@@ -88,7 +88,7 @@ impl Lexer {
             other => {
                 if { other.is_ascii_digit() } {
                     self.number();
-                } else if other.is_ascii_alphabetic() {
+                } else if other.is_ascii_alphabetic() || other == b'_' {
                     self.identifier();
                 } else {
                     print_error(self.line, format!("Unexpected character: {}", other as char));
@@ -100,7 +100,7 @@ impl Lexer {
 
     fn identifier(&mut self) {
         while let Some(c) = self.peek() {
-            if c.is_ascii_alphanumeric() {
+            if c.is_ascii_alphanumeric() || c == b'_' {
                 self.advance();
             } else {
                 break;
