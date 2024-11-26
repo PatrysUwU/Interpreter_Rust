@@ -126,7 +126,6 @@ impl Token {
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match &self.token_type {
-            TokenType::IDENTIFIER(x) |
             TokenType::STRING(x) => {
                 write!(f, "{} {} {}", self.token_type, self.lexeme, x)
             }
