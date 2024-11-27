@@ -1,5 +1,5 @@
 use bytes::{Buf, BytesMut};
-use crate::parser::{Token, TokenType, print_error};
+use crate::parser::{Token, TokenType, print_error, Value};
 
 pub struct Lexer {
     source: BytesMut,
@@ -28,7 +28,7 @@ impl Lexer {
             self.start = self.curr;
             self.scan_token();
         }
-        self.tokens.push(Token::new(TokenType::EOF, String::from(""), self.line));
+        self.tokens.push(Token::new(TokenType::EOF, String::from(""), Value::Nil, self.line));
     }
 
     fn is_at_end(&self) -> bool {
@@ -42,45 +42,45 @@ impl Lexer {
     fn scan_token(&mut self) {
         let c = self.advance();
         match c {
-            b'(' => { self.add_token(TokenType::LEFT_PAREN) }
-            b')' => { self.add_token(TokenType::RIGHT_PAREN) }
-            b'{' => { self.add_token(TokenType::LEFT_BRACE) }
-            b'}' => { self.add_token(TokenType::RIGHT_BRACE) }
-            b',' => { self.add_token(TokenType::COMMA) }
-            b'.' => { self.add_token(TokenType::DOT) }
-            b'-' => { self.add_token(TokenType::MINUS) }
-            b'+' => { self.add_token(TokenType::PLUS) }
-            b';' => { self.add_token(TokenType::SEMICOLON) }
-            b'*' => { self.add_token(TokenType::STAR) }
+            b'(' => { self.add_token(TokenType::LEFT_PAREN, Value::Nil) }
+            b')' => { self.add_token(TokenType::RIGHT_PAREN, Value::Nil) }
+            b'{' => { self.add_token(TokenType::LEFT_BRACE, Value::Nil) }
+            b'}' => { self.add_token(TokenType::RIGHT_BRACE, Value::Nil) }
+            b',' => { self.add_token(TokenType::COMMA, Value::Nil) }
+            b'.' => { self.add_token(TokenType::DOT, Value::Nil) }
+            b'-' => { self.add_token(TokenType::MINUS, Value::Nil) }
+            b'+' => { self.add_token(TokenType::PLUS, Value::Nil) }
+            b';' => { self.add_token(TokenType::SEMICOLON, Value::Nil) }
+            b'*' => { self.add_token(TokenType::STAR, Value::Nil) }
             b'"' => { self.string() }
             b'!' => {
                 match self.match_next(b'=') {
-                    true => { self.add_token(TokenType::BANG_EQUAL) }
-                    false => { self.add_token(TokenType::BANG) }
+                    true => { self.add_token(TokenType::BANG_EQUAL, Value::Nil) }
+                    false => { self.add_token(TokenType::BANG, Value::Nil) }
                 }
             }
             b'=' => {
                 match self.match_next(b'=') {
-                    true => { self.add_token(TokenType::EQUAL_EQUAL) }
-                    false => { self.add_token(TokenType::EQUAL) }
+                    true => { self.add_token(TokenType::EQUAL_EQUAL, Value::Nil) }
+                    false => { self.add_token(TokenType::EQUAL, Value::Nil) }
                 }
             }
             b'<' => {
                 match self.match_next(b'=') {
-                    true => { self.add_token(TokenType::LESS_EQUAL) }
-                    false => { self.add_token(TokenType::LESS) }
+                    true => { self.add_token(TokenType::LESS_EQUAL, Value::Nil) }
+                    false => { self.add_token(TokenType::LESS, Value::Nil) }
                 }
             }
             b'>' => {
                 match self.match_next(b'=') {
-                    true => { self.add_token(TokenType::GREATER_EQUAL) }
-                    false => { self.add_token(TokenType::GREATER) }
+                    true => { self.add_token(TokenType::GREATER_EQUAL, Value::Nil) }
+                    false => { self.add_token(TokenType::GREATER, Value::Nil) }
                 }
             }
             b'/' => {
                 match self.match_next(b'/') {
                     true => { self.skip_line() }
-                    false => { self.add_token(TokenType::SLASH) }
+                    false => { self.add_token(TokenType::SLASH, Value::Nil) }
                 }
             }
             b' ' | b'\t' | b'\r' => {}
@@ -108,24 +108,24 @@ impl Lexer {
         }
         let val = std::str::from_utf8(&self.source[self.start..self.curr]).unwrap();
         match val {
-            "and" => self.add_token(TokenType::AND),
-            "class" => self.add_token(TokenType::CLASS),
-            "else" => self.add_token(TokenType::ELSE),
-            "false" => self.add_token(TokenType::FALSE),
-            "for" => self.add_token(TokenType::FOR),
-            "fun" => self.add_token(TokenType::FUN),
-            "if" => self.add_token(TokenType::IF),
-            "nil" => self.add_token(TokenType::NIL),
-            "or" => self.add_token(TokenType::OR),
-            "print" => self.add_token(TokenType::PRINT),
-            "return" => self.add_token(TokenType::RETURN),
-            "super" => self.add_token(TokenType::SUPER),
-            "this" => self.add_token(TokenType::THIS),
-            "true" => self.add_token(TokenType::TRUE),
-            "var" => self.add_token(TokenType::VAR),
-            "while" => self.add_token(TokenType::WHILE),
+            "and" => self.add_token(TokenType::AND, Value::Nil),
+            "class" => self.add_token(TokenType::CLASS, Value::Nil),
+            "else" => self.add_token(TokenType::ELSE, Value::Nil),
+            "false" => self.add_token(TokenType::FALSE, Value::Nil),
+            "for" => self.add_token(TokenType::FOR, Value::Nil),
+            "fun" => self.add_token(TokenType::FUN, Value::Nil),
+            "if" => self.add_token(TokenType::IF, Value::Nil),
+            "nil" => self.add_token(TokenType::NIL, Value::Nil),
+            "or" => self.add_token(TokenType::OR, Value::Nil),
+            "print" => self.add_token(TokenType::PRINT, Value::Nil),
+            "return" => self.add_token(TokenType::RETURN, Value::Nil),
+            "super" => self.add_token(TokenType::SUPER, Value::Nil),
+            "this" => self.add_token(TokenType::THIS, Value::Nil),
+            "true" => self.add_token(TokenType::TRUE, Value::Nil),
+            "var" => self.add_token(TokenType::VAR, Value::Nil),
+            "while" => self.add_token(TokenType::WHILE, Value::Nil),
             _ => {
-                self.add_token(TokenType::IDENTIFIER(val.to_string()))
+                self.add_token(TokenType::IDENTIFIER, Value::Nil)
             }
         }
     }
@@ -151,7 +151,7 @@ impl Lexer {
         }
         self.advance();
         let val = &self.source[self.start + 1..self.curr - 1];
-        self.add_token(TokenType::STRING(String::from_utf8(val.to_vec()).unwrap()));
+        self.add_token(TokenType::STRING, Value::String(String::from_utf8(val.to_vec()).unwrap().parse().unwrap()));
     }
     fn number(&mut self) {
         while let Some(x) = self.peek() {
@@ -174,7 +174,7 @@ impl Lexer {
             }
         }
         let val = &self.source[self.start..self.curr];
-        self.add_token(TokenType::NUMBER(String::from_utf8(val.to_vec()).unwrap().parse().unwrap()));
+        self.add_token(TokenType::NUMBER, Value::Number(String::from_utf8(val.to_vec()).unwrap().parse().unwrap()));
     }
 
     fn peek_next(&mut self) -> Option<u8> {
@@ -197,10 +197,10 @@ impl Lexer {
         }
     }
 
-    fn add_token(&mut self, token_type: TokenType) {
+    fn add_token(&mut self, token_type: TokenType, token_value: Value) {
         let text = &self.source[self.start..self.curr];
         let text: String = String::from_utf8(text.to_vec()).unwrap();
-        self.tokens.push(Token::new(token_type, text, self.line))
+        self.tokens.push(Token::new(token_type, text, token_value, self.line))
     }
 
     fn advance(&mut self) -> u8 {

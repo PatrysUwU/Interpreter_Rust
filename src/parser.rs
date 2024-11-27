@@ -1,12 +1,34 @@
 use std::fmt;
-use std::fmt::{write, Formatter};
+use std::fmt::Formatter;
 
 mod lexer;
+pub(crate) mod expr;
+pub
+
+mod ast_printer;
+
 use lexer::Lexer;
 
 pub fn print_error(line: i32, message: String) {
     eprintln!("[line {}] Error: {}", line, message);
 }
+
+pub enum Value {
+    String(String),
+    Number(f64),
+    Nil,
+}
+
+impl fmt::Display for Value {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Value::String(x) => { write!(f, "{}", x) }
+            Value::Number(x) => { write!(f, "{}", x) }
+            Value::Nil => { write!(f, "null") }
+        }
+    }
+}
+
 #[derive(Debug)]
 #[allow(dead_code, non_camel_case_types)]
 pub enum TokenType {
@@ -35,9 +57,9 @@ pub enum TokenType {
     LESS_EQUAL,
 
     // literals.
-    IDENTIFIER(String),
-    STRING(String),
-    NUMBER(f64),
+    IDENTIFIER,
+    STRING,
+    NUMBER,
 
     // keywords.
     AND,
@@ -82,9 +104,9 @@ impl fmt::Display for TokenType {
             TokenType::GREATER_EQUAL => { write!(f, "GREATER_EQUAL") }
             TokenType::LESS => { write!(f, "LESS") }
             TokenType::LESS_EQUAL => { write!(f, "LESS_EQUAL") }
-            TokenType::IDENTIFIER(_) => { write!(f, "IDENTIFIER") }
-            TokenType::STRING(_) => { write!(f, "STRING") }
-            TokenType::NUMBER(_) => { write!(f, "NUMBER") }
+            TokenType::IDENTIFIER => { write!(f, "IDENTIFIER") }
+            TokenType::STRING => { write!(f, "STRING") }
+            TokenType::NUMBER => { write!(f, "NUMBER") }
             TokenType::AND => { write!(f, "AND") }
             TokenType::CLASS => { write!(f, "CLASS") }
             TokenType::ELSE => { write!(f, "ELSE") }
@@ -109,14 +131,16 @@ impl fmt::Display for TokenType {
 
 pub struct Token {
     token_type: TokenType,
+    literal: Value,
     lexeme: String,
     line: i32,
 }
 
 impl Token {
-    fn new(token_type: TokenType, lexeme: String, line: i32) -> Self {
+    fn new(token_type: TokenType, lexeme: String, literal: Value, line: i32) -> Self {
         Token {
             token_type,
+            literal,
             lexeme,
             line,
         }
@@ -125,17 +149,7 @@ impl Token {
 
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match &self.token_type {
-            TokenType::STRING(x) => {
-                write!(f, "{} {} {}", self.token_type, self.lexeme, x)
-            }
-            TokenType::NUMBER(x) => {
-                write!(f, "{} {} {:?}", self.token_type, self.lexeme, x)
-            }
-            _ => {
-                write!(f, "{} {} null", self.token_type, self.lexeme)
-            }
-        }
+        write!(f, "{} {} {}", self.token_type, self.lexeme, self.literal)
     }
 }
 
