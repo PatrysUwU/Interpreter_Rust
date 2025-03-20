@@ -6,7 +6,7 @@ This is a programming language interpreter project written in **Rust**. At this 
 
 ## Requirements
 
-- **Rust** version 1.50 or later. Rust is required to compile and run the project.
+- **Rust** version 1.50 or later. Rust is required to compile and run the project.<br>
 ![My Skills](https://skillicons.dev/icons?i=rust)
 
 ## Installation
